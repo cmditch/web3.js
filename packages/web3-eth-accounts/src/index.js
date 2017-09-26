@@ -316,6 +316,7 @@ Accounts.prototype.encrypt = function (privateKey, password, options) {
 
 function Wallet(accounts) {
     this.length = 0;
+    this.indexPointer = 0;
     this._accounts = accounts;
     this.defaultKeyName = "web3js_wallet";
 }
@@ -334,12 +335,13 @@ Wallet.prototype.add = function (account) {
     }
     if (!this[account.address]) {
         account = this._accounts.privateKeyToAccount(account.privateKey);
-        account.index = this.length;
+        account.index = this.indexPointer;
 
-        this[this.length] = account;
+        this[account.index] = account;
         this[account.address] = account;
         this[account.address.toLowerCase()] = account;
 
+        this.indexPointer++;
         this.length++;
 
         return account;
